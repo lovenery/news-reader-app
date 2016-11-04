@@ -42,15 +42,18 @@
         <section class="list">
           <!-- <article class="item">{{ news }}</article> -->
           <!-- <article class="item" ng-repeat="new in news">{{ new }}</article> -->
-          <article ng-repeat="new in news">
-            <a href="{{ new.url }}" class="item item-avatar-left">
-              <img ng-src="{{ new.thumbnailUrl }}" alt="縮圖" />
-              <h2 style="white-space:normal;">{{ new.title }}</h2>
-              <p style="white-space:normal;">{{ new.title }}</p>
-              <p><i>id: {{ new.id }}</i></p>
+          <article ng-repeat="newsArticle in news track by $index">
+            <a href="{{ newsArticle.link }}" class="item item-avatar-left" ng-if="newsArticle.title">
+              <img ng-src="{{ newsArticle.image }}" alt="縮圖" />
+              <h2 style="white-space:normal;">{{ newsArticle.title }}</h2>
+              <p style="white-space:normal;">{{ newsArticle.time }}, {{ newsArticle.date }}</p>
             </a>
           </article>
         </section>
+        <ion-infinite-scroll
+          on-infinite="loadMore()"
+          distance="1%">
+        </ion-infinite-scroll>
       </ion-content>
     </ion-pane>
   </body>

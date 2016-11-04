@@ -6,15 +6,41 @@
 var app = angular.module('newsApp', ['ionic']);
 
 app.controller('newsController', function ($scope, $http) {
-
   $scope.news = [];
+
+  $scope.loadMore = function() {
+    var parameters = {
+      id: $scope.lastarticleID
+    };
+    $http.get('http://codedamn.com/filesCodedamn/news.php',{ params: parameters }).success(function(items) {
+      // 新的 有下一篇文章的ID參數
+      $scope.lastarticleID = items.lastID;//[items.length-1].id;
+      // console.log(items[items.length-1].id);
+      // console.log(items.lastID);
+      angular.forEach(items, function (item) {
+        $scope.news.push(item);
+      });
+      // console.log($scope.news);
+      $scope.$broadcast('scroll.infiniteScrollComplete');
+    });
+  };
 
   $http({
     method: "GET",
-    url: "https://jsonplaceholder.typicode.com/photos"
+    url: "http://codedamn.com/filesCodedamn/news.php"
   }).then(function (newsData) {
-    console.log(newsData);
-    $scope.news = newsData.data;
+    // array
+    angular.forEach(newsData.data, function (newsArticle) {
+      $scope.news.push(newsArticle);
+    });
+    // console.log($scope.news);
+    // 有下一篇文章的ID參數
+    $scope.lastarticleID = newsData.data.lastID;//[newsData.data.length-1].id;
+    // console.log($scope.lastarticleID);
+
+    // object
+    // $scope.news = newsData.data;
+    // console.log(newsData);
   })
 });
 

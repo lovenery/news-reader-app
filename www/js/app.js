@@ -25,6 +25,21 @@ app.controller('newsController', function ($scope, $http) {
     });
   };
 
+  $scope.doRefresh = function() {
+    $scope.news = [];
+    $http({
+      method: "GET",
+      url: "http://codedamn.com/filesCodedamn/news.php"
+    }).then(function (newsData) {
+      angular.forEach(newsData.data, function (newsArticle) {
+        $scope.news.push(newsArticle);
+      });
+      $scope.lastarticleID = newsData.data.lastID;
+
+      $scope.$broadcast('scroll.refreshComplete');
+    });
+  };
+
   $http({
     method: "GET",
     url: "http://codedamn.com/filesCodedamn/news.php"
@@ -41,7 +56,9 @@ app.controller('newsController', function ($scope, $http) {
     // object
     // $scope.news = newsData.data;
     // console.log(newsData);
-  })
+  });
+
+
 });
 
 app.run(function($ionicPlatform) {
